@@ -79,7 +79,7 @@ Respond ONLY with a valid JSON object in this exact format (no markdown, no extr
     // process.env.GEMINI_API_KEY reads from Vercel's environment
     // variables — set this in your Vercel dashboard (see README).
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
