@@ -19,13 +19,12 @@ ${text}
 Your job is to:
 1. Identify the 3-5 most important factual claims in the text.
 2. For each claim, assess whether it is: SUPPORTED (backed by evidence), DISPUTED (contradicted by evidence), or UNVERIFIED (cannot be confirmed).
-3. Give an overall credibility score from 0 to 100 (100 = very likely true, 0 = very likely false). You MUST follow these rules strictly: 0-20 = completely false, 21-40 = mostly false, 41-59 = disputed or unverifiable, 60-79 = mostly true, 80-100 = completely true. The score MUST match your verdict. If you say "False" the score must be under 20
+3. The "verdict" field MUST be one of these exact words only: "True", "Mostly True", "Disputed", "Mostly False", "False". No other values allowed.
 4. Provide 3-5 real, plausible sources relevant to the claims. Use real well-known publications (BBC, Reuters, AP News, Nature, etc.).
-5. Give a short verdict label and a 1-2 sentence summary.
+5. Write a 1-2 sentence summary.
 
 Respond ONLY with a valid JSON object in this exact format (no markdown, no code fences, no extra text):
 {
-  "score": 72,
   "verdict": "Mostly True",
   "summary": "The core claims are supported by scientific evidence, though some details may be overstated.",
   "claims": [
@@ -82,16 +81,17 @@ Respond ONLY with a valid JSON object in this exact format (no markdown, no code
 
     const result = JSON.parse(jsonMatch[0]);
 
-    // Force the score to match the verdict if they contradict each other
-    const verdict = (result.verdict || '').toLowerCase();
-    if (verdict.includes('false') || verdict.includes('fake') || verdict.includes('incorrect')) {
-      result.score = Math.min(result.score, 20);
-    } else if (verdict.includes('misleading') || verdict.includes('disputed') || verdict.includes('partly')) {
-      result.score = Math.min(result.score, 45);
-      result.score = Math.max(result.score, 25);
-    } else if (verdict.includes('true') || verdict.includes('accurate') || verdict.includes('correct')) {
-      result.score = Math.max(result.score, 65);
-    }
+    // Calculate score ourselves based on verdict — never trust the AI's number
+    const verdictScores = {
+      'true':         95,
+      'mostly true':  75,
+      'disputed':     45,
+      'mostly false': 25,
+      'false':        10,
+    };
+
+    const verdictKey = (result.verdict || '').toLowerCase().trim();
+    result.score = verdictScores[verdictKey] ?? 50;
 
     return response.status(200).json(result);
 
