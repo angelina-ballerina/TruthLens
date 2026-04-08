@@ -19,7 +19,7 @@ ${text}
 Your job is to:
 1. Identify the 3-5 most important factual claims in the text.
 2. For each claim, assess whether it is: SUPPORTED (backed by evidence), DISPUTED (contradicted by evidence), or UNVERIFIED (cannot be confirmed).
-3. Give an overall credibility score from 0 to 100 (100 = very likely true, 0 = very likely false).
+3. Give an overall credibility score from 0 to 100 (100 = very likely true, 0 = very likely false). You MUST follow these rules strictly: 0-20 = completely false, 21-40 = mostly false, 41-59 = disputed or unverifiable, 60-79 = mostly true, 80-100 = completely true. The score MUST match your verdict. If you say "False" the score must be under 20
 4. Provide 3-5 real, plausible sources relevant to the claims. Use real well-known publications (BBC, Reuters, AP News, Nature, etc.).
 5. Give a short verdict label and a 1-2 sentence summary.
 
