@@ -81,6 +81,18 @@ Respond ONLY with a valid JSON object in this exact format (no markdown, no code
     if (!jsonMatch) throw new Error('No JSON found in Groq response');
 
     const result = JSON.parse(jsonMatch[0]);
+
+    // Force the score to match the verdict if they contradict each other
+    const verdict = (result.verdict || '').toLowerCase();
+    if (verdict.includes('false') || verdict.includes('fake') || verdict.includes('incorrect')) {
+      result.score = Math.min(result.score, 20);
+    } else if (verdict.includes('misleading') || verdict.includes('disputed') || verdict.includes('partly')) {
+      result.score = Math.min(result.score, 45);
+      result.score = Math.max(result.score, 25);
+    } else if (verdict.includes('true') || verdict.includes('accurate') || verdict.includes('correct')) {
+      result.score = Math.max(result.score, 65);
+    }
+
     return response.status(200).json(result);
 
   } catch (error) {
